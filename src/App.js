@@ -1,25 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+import Login from "./components/login";
+import Mynavbar from "./components/navbar";
+import {useSelector} from "react-redux";
+import Register from "./components/register";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const register = useSelector((state)=>{
+        return state.register;
+    });
+
+    return (<div>
+        <Mynavbar/>
+        {register == -1 && <Login  />}
+        {register == 1 && <Register  />}
+    </div>);
 }
 
 export default App;
