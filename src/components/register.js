@@ -2,6 +2,11 @@ import React, {useState} from 'react';
 import {Alert, Button, Card, Container, Form,} from "react-bootstrap";
 import {useDispatch} from "react-redux";
 import {togleRegister} from "../redux/registerSlice";
+import myenv from "../config/env";
+import {add_auth} from "../redux/authSlice";
+
+const axios = require('axios').default;
+
 
 const Register = () => {
     const dispatch = useDispatch();
@@ -9,7 +14,12 @@ const Register = () => {
         dispatch(togleRegister({chosen: -1}))
     }
 
+    let handleAuth = (user) => {
+        dispatch(add_auth(user))
+    }
+
     const [register, setRegister] = useState({'name': '', 'password': '', 'confirmPassword': ''});
+    const [error, setError] = useState({'error': false, 'body': ''})
 
     let handleChange = (choice, e) => {
         switch (choice) {
@@ -40,10 +50,31 @@ const Register = () => {
         }
     }
 
+    let handleSubmit = async (e) => {
+        e.preventDefault()
+        if (register.password === '') return setError({'error': true, 'body': 'password should not be empty'})
+        if (register.password !== register.confirmPassword) return setError({
+            'error': true,
+            'body': 'password doest match'
+        })
+        setError({'error': false, 'body': ''})
+
+
+        await axios.post(myenv.base_url + '/users', {
+            'name': register.name,
+            'password': register.password
+        }, {headers: myenv.headers}).then((response) => {
+            handleAuth({'name': response.data.name, 'token': response.data.token, 'notes': response.data.notes})
+        }).catch(function (error) {
+            setError({'error': true, 'body': error.response.data.status})
+        });
+    }
+
     return (<div>
         <Container className="d-flex justify-content-center">
             <Card style={{width: '50rem', marginTop: "7rem"}}>
                 <Card.Body>
+                    {error.error && <Alert variant="danger">{error.body}</Alert>}
                     <Card.Title>Register</Card.Title>
                     <Form>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -75,12 +106,15 @@ const Register = () => {
                             <Form.Text className="text-muted">
                                 Already have an Account ?
                             </Form.Text>
-                            <a style={{marginLeft: '1rem'}} onClick={handleLogin}>login</a>
+                            <a style={{marginLeft: '1rem', cursor: 'pointer', color: 'blue'}}
+                               onClick={handleLogin}>login</a>
                         </Form.Group>
 
-                        <Button variant="primary" type="submit"
-                                disabled={!(register.password === register.confirmPassword)}>Submit</Button>
-
+                        <Button variant="primary"
+                                disabled={!(register.password === register.confirmPassword)}
+                                onClick={(e) => {
+                                    handleSubmit(e)
+                                }}>Submit</Button>
                     </Form>
                 </Card.Body>
             </Card>
