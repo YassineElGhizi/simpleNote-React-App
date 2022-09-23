@@ -8,9 +8,11 @@ import myenv from "../config/env";
 
 const Login = () => {
     const dispatch = useDispatch();
+
     let handleRegister = () => {
         dispatch(togleRegister({chosen: 1}))
     }
+
 
     let handleAuth = (user) => {
         dispatch(add_auth(user))
@@ -26,8 +28,17 @@ const Login = () => {
         setError({'error': false, 'body': ''})
 
         await axios.post(myenv.base_url + '/users/login', login, {headers: myenv.headers}).then((response) => {
-            console.log(":response.data => ", response.data)
             handleAuth({'name': response.data.name, 'token': response.data.token, 'notes': response.data.notes})
+
+            window.localStorage.setItem("auth", true)
+            window.localStorage.setItem("user", JSON.stringify({
+                'name': response.data.name,
+                'token': response.data.token,
+                'notes': response.data.notes
+            }))
+            window.location.href = "/notes"
+
+
         }).catch(function (error) {
             setError({'error': true, 'body': error.response.data.status})
         });
