@@ -41,7 +41,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/notes" element={<Dashboard/>}/>
-                <Route path="/" element={<Welcome/>}/>
+                <Route path="/" element={Math.abs(register) != 1 && <Welcome/>}/>
             </Routes>
 
         </BrowserRouter>

@@ -28,14 +28,17 @@ const Login = () => {
         setError({'error': false, 'body': ''})
 
         await axios.post(myenv.base_url + '/users/login', login, {headers: myenv.headers}).then((response) => {
-            handleAuth({'name': response.data.name, 'token': response.data.token, 'notes': response.data.notes})
 
-            window.localStorage.setItem("auth", true)
-            window.localStorage.setItem("user", JSON.stringify({
+            let user = {
                 'name': response.data.name,
                 'token': response.data.token,
-                'notes': response.data.notes
-            }))
+                'notes': response.data.notes,
+                'id': response.data.id
+            }
+            handleAuth(user)
+
+            window.localStorage.setItem("auth", true)
+            window.localStorage.setItem("user", JSON.stringify(user))
             window.location.href = "/notes"
 
 

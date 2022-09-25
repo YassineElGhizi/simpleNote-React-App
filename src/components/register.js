@@ -64,7 +64,16 @@ const Register = () => {
             'name': register.name,
             'password': register.password
         }, {headers: myenv.headers}).then((response) => {
-            handleAuth({'name': response.data.name, 'token': response.data.token, 'notes': response.data.notes})
+            let user = {
+                'name': response.data.name,
+                'token': response.data.token,
+                'notes': response.data.notes,
+                'id': response.data.id
+            }
+            handleAuth(user)
+            window.localStorage.setItem("auth", true)
+            window.localStorage.setItem("user", JSON.stringify(user))
+            window.location.href = "/notes"
         }).catch(function (error) {
             setError({'error': true, 'body': error.response.data.status})
         });
