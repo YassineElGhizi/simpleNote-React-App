@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import axios from "axios";
 import {base_url} from "../../config/env";
@@ -7,9 +7,16 @@ import {add_auth} from "../../redux/authSlice";
 import {Button, Col, Container} from "react-bootstrap";
 
 
-const Rightpanel = () => {
+const Rightpanel = forwardRef((props, ref) => {
     const [id, setId] = useState(null);
     const [content, setContent] = useState('');
+
+    useImperativeHandle(ref, () => ({
+        childFunction1(id, content) {
+            setId(id)
+            setContent(content)
+        }
+    }));
 
     let empty = () => {
         setId(null)
@@ -41,9 +48,12 @@ const Rightpanel = () => {
                 alert("Network Error 01")
             })
         } else {
-            axios.put(base_url + '/notes/' + id, {"body": content}, {'Accept': 'application/json'}
+            axios.put(base_url + '/notes/' + id, {"body": e.target.value}, {'Accept': 'application/json'}
             ).then((res) => {
-                setId(res.data.notes.slice(-1)[0].id)
+                console.log("POSTING TO /notes/" + id + "the body : ", e.target.value)
+                console.log("Data After Updatre =", res.data)
+                // setId(res.data.notes.slice(-1)[0].id)
+                setId(id)
                 handleAuth(res.data)
                 window.localStorage.setItem("auth", true)
                 window.localStorage.setItem("user", JSON.stringify(res.data))
@@ -52,23 +62,21 @@ const Rightpanel = () => {
                 alert("Network Error 02")
             })
         }
-
-
     }
 
     return (<div>
-        <div className="d-flex justify-content-center mb-2">
+        <div className="d-flex justify-content-center mb-2 mt-5">
             <Col sm="3">
                 <Container className="d-flex justify-content-center">
-                    <Button variant="primary" style={{width: '100%'}} onClick={empty} >Add new 🗒</Button>{' '}
+                    <Button variant="primary" style={{width: '100%'}} onClick={empty}>Add new 🗒</Button>{' '}
                 </Container>
             </Col>
         </div>
-
+        
         <Form.Control as="textarea" style={{height: '30rem'}} value={content} onChange={(e) => {
             handleWriting(e)
         }}/>
     </div>)
-};
+});
 
 export default Rightpanel;
