@@ -17,7 +17,7 @@ const Dashabord = () => {
         <Container fluid>
             <Row>
                 <Col sm="3"
-                     style={{ padding: '20px', marginTop: '1rem', background : '#F7F7F7'}}>
+                     style={{ padding: '20px', background : '#e7e6e6'}}>
                     <Leftpanel oussama={oussama}/>
                 </Col>
                 <Col sm="9">

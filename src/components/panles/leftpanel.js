@@ -2,8 +2,11 @@ import React from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import {Badge, Col, Row} from "react-bootstrap";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Trash} from 'react-bootstrap-icons';
+import axios from "axios";
+import {base_url} from "../../config/env";
+import {add_auth} from "../../redux/authSlice";
 
 const Leftpanel = ({oussama}) => {
 
@@ -11,8 +14,24 @@ const Leftpanel = ({oussama}) => {
         return state.auth.notes;
     });
 
+    const dispatch = useDispatch();
+
+    let handleAuth = (user) => {
+        dispatch(add_auth(user))
+    }
+
     let delete_note = (note) => {
-        console.log("reciev note 😗=", note)
+        console.log("note 😗=", note)
+        axios.delete(base_url + '/notes/' + note.id, {'Accept': 'application/json'})
+            .then((res) => {
+                oussama({id: null, body: ''})
+                handleAuth(res.data)
+                window.localStorage.setItem("auth", true)
+                window.localStorage.setItem("user", JSON.stringify(res.data))
+                console.log("res after delete 🐸 ", res.data)
+            }).catch((err) => {
+            console.log("ERROOR AT DELETING ITEM 😥 ", err)
+        })
     }
 
     return (< div>
@@ -31,8 +50,7 @@ const Leftpanel = ({oussama}) => {
 
                     <Badge pill bg="danger" onClick={() => {
                         delete_note(note)
-                    }}
-                           style={{cursor: 'pointer'}}><Trash/>
+                    }} style={{cursor: 'pointer'}}><Trash/>
                     </Badge>{' '}
                 </Col>)
             })}

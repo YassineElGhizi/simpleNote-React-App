@@ -16,15 +16,23 @@ function Mynavbar() {
                         </Col>
                         <Col>
                             <Nav.Link>
-                                <img src="/images/fast.png" alt=""
+                                <img src="/images/redux.png" alt=""
                                      style={{
-                                         maxWidth: '8rem', filter: 'brightness(1.75)'
-                                     }}/></Nav.Link>
+                                         maxWidth: '4.3rem', filter: 'brightness(1.75)'
+                                     }}/>
+                            </Nav.Link>
                         </Col>
                         <Col>
                             <Nav.Link>
                                 <img src="/images/mongodb.png" alt="" style={{
                                     maxWidth: '3rem', filter: 'brightness(1.25)'
+                                }}/>
+                            </Nav.Link>
+                        </Col>
+                        <Col>
+                            <Nav.Link>
+                                <img src="/images/node.png" alt="" style={{
+                                    maxWidth: '5rem', filter: 'brightness(1.25)'
                                 }}/>
                             </Nav.Link>
                         </Col>

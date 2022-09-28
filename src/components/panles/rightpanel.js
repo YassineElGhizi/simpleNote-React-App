@@ -65,14 +65,13 @@ const Rightpanel = forwardRef((props, ref) => {
     }
 
     return (<div>
-        <div className="d-flex justify-content-center mb-2 mt-5">
+        <div className="d-flex justify-content-center mb-2 mt-1">
             <Col sm="3">
                 <Container className="d-flex justify-content-center">
                     <Button variant="primary" style={{width: '100%'}} onClick={empty}>Add new 🗒</Button>{' '}
                 </Container>
             </Col>
         </div>
-        
         <Form.Control as="textarea" style={{height: '30rem'}} value={content} onChange={(e) => {
             handleWriting(e)
         }}/>
