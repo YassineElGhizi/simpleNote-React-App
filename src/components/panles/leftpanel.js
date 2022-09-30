@@ -14,14 +14,21 @@ const Leftpanel = ({oussama}) => {
         return state.auth.notes;
     });
 
-    const dispatch = useDispatch();
+    const auth = useSelector((state) => {
+        return state.auth;
+    })
 
     let handleAuth = (user) => {
         dispatch(add_auth(user))
     }
 
+    const dispatch = useDispatch();
+
+    let update_notes = (user) => {
+        dispatch(add_auth(user))
+    }
+
     let delete_note = (note) => {
-        console.log("note 😗=", note)
         axios.delete(base_url + '/notes/' + note.id, {'Accept': 'application/json'})
             .then((res) => {
                 oussama({id: null, body: ''})
@@ -34,12 +41,23 @@ const Leftpanel = ({oussama}) => {
         })
     }
 
+    let search = (e) => {
+        axios.post(base_url + '/notes/search', {
+            'keyword': e.target.value, 'user_id': auth.id
+        }, {'Accept': 'application/json'})
+            .then((res) => {
+                console.log("search results 🐸 :", res.data)
+                update_notes({name: auth.name, token: auth.token, notes: res.data, id: auth.id})
+            }).catch((err) => {
+            console.log("ERROOR AT DELETING ITEM 😥 ", err)
+        })
+    }
+
     return (< div>
         < InputGroup
             className="mb-3 m-lg-1">
-            < InputGroup.Text
-                id="basic-addon1">🔎</InputGroup.Text>
-            <Form.Control aria-describedby="basic-addon1"/>
+            < InputGroup.Text id="basic-addon1">🔎</InputGroup.Text>
+            <Form.Control aria-describedby="basic-addon1" onChange={(e) => search(e)}/>
         </InputGroup>
         <Row>
             {notes.slice(0).reverse().map((note) => {
